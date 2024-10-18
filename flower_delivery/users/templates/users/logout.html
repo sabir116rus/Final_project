@@ -1,0 +1,12 @@
+<!-- templates/users/logout.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Выход{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <h2>Вы успешно вышли из системы.</h2>
+        <a href="{% url 'login' %}">Войти снова</a>
+    </div>
+{% endblock %}
