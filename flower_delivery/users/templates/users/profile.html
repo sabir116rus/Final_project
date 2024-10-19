@@ -1,0 +1,17 @@
+<!-- users/templates/users/profile.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Профиль</h2>
+            <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Телефон:</strong> {{ user.profile.phone }}</p>
+            <p><strong>Адрес:</strong> {{ user.profile.address }}</p>
+        </div>
+    </div>
+{% endblock %}
