@@ -1,4 +1,4 @@
-<!-- templates/users/logout.html -->
+<!-- users/templates/users/logout.html -->
 
 {% extends 'base.html' %}
 
@@ -7,6 +7,6 @@
 {% block content %}
     <div class="text-center">
         <h2>Вы успешно вышли из системы.</h2>
-        <a href="{% url 'login' %}">Войти снова</a>
+        <a href="{% url 'login' %}" class="btn btn-primary">Войти снова</a>
     </div>
 {% endblock %}

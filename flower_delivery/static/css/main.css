@@ -1,4 +1,4 @@
-/* static/css/main.css */
+/* flower_delivery/static/css/main.css */
 
 body {
     font-family: Arial, sans-serif;
@@ -7,85 +7,15 @@ body {
     padding: 0;
 }
 
-h1 {
-    text-align: center;
-    color: #343a40;
-    margin-top: 20px;
-}
-
-.product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-}
-
-.product-item {
-    background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    width: 300px;
-    margin: 15px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.product-item img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-.product-item h2 {
-    font-size: 1.5em;
-    color: #007bff;
-}
-
-.product-item p {
-    color: #6c757d;
-}
-
-.product-item .price {
-    font-weight: bold;
-    color: #28a745;
-}
-
-/* static/css/main.css */
-
-/* Общие стили для тела страницы */
-body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Стили для заголовков */
 h1, h2 {
     color: #343a40;
 }
 
-/* Стили для карточек продуктов */
-.card {
-    transition: transform 0.2s;
+.container {
+    margin-top: 20px;
 }
 
-.card:hover {
-    transform: scale(1.05);
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
 }
-
-/* Стили для кнопок */
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-
-.btn-primary:hover, .btn-success:hover {
-    background-color: #0056b3;
-    border-color: #004085;
-}
-
-/* Дополнительные стили по необходимости */
