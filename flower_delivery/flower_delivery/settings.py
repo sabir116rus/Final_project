@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from django.contrib.messages import constants as messages
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +36,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'telegram_bot',
     'orders',
     'users',
     'products',
@@ -148,3 +153,8 @@ MESSAGE_TAGS = {
 # settings.py
 
 CART_SESSION_ID = 'cart'
+
+# settings.py
+
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+ADMIN_TELEGRAM_ID = os.getenv('ADMIN_TELEGRAM_ID')

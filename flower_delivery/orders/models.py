@@ -1,8 +1,13 @@
 # orders/models.py
 
+import asyncio
 from django.db import models
 from django.contrib.auth.models import User
 from products.models import Product
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+from telegram_bot.bot import bot
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -48,3 +53,25 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
+
+
+
+# Асинхронная функция для отправки уведомления о новом заказе
+async def send_telegram_notification(order):
+    await bot.send_message(
+        settings.ADMIN_TELEGRAM_ID,
+        f"Новый заказ №{order.id} от пользователя {order.user.username}. Сумма: {order.total_price} руб."
+    )
+
+# Сигнал, который срабатывает при создании нового заказа
+@receiver(post_save, sender=Order)
+def send_order_notification(sender, instance, created, **kwargs):
+    if created:
+        try:
+            # Создаем новый цикл событий
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(send_telegram_notification(instance))
+            loop.close()
+        except Exception as e:
+            print(f"Ошибка при отправке уведомления в Telegram: {e}")
