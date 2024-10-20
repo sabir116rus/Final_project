@@ -1,4 +1,4 @@
-<!-- flower_delivery/templates/products/product_list.html -->
+<!-- products/templates/products/product_list.html -->
 
 {% extends 'base.html' %}
 
@@ -10,12 +10,15 @@
         {% for product in products %}
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
-                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    <img src="{{ product.image.url }}" class="card-img-top img-fluid product-image" alt="{{ product.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
-                        <p class="card-text">{{ product.description }}</p>
+                        <!-- Убрано описание -->
                         <p class="text-success fw-bold">Цена: {{ product.price }} руб.</p>
-                        <!-- Здесь можно добавить кнопку "Добавить в корзину" -->
+                        <form action="{% url 'cart_add' product.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -5,13 +5,123 @@
 {% block title %}Профиль пользователя{% endblock %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center">Профиль</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Профиль</h2>
             <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
             <p><strong>Телефон:</strong> {{ user.profile.phone }}</p>
             <p><strong>Адрес:</strong> {{ user.profile.address }}</p>
+        </div>
+        <div class="col-md-8">
+            <h2>История заказов</h2>
+
+            <!-- Активные заказы -->
+            {% if pending_orders or accepted_orders or in_progress_orders or in_delivery_orders %}
+                <h4>Активные заказы</h4>
+                {% if pending_orders %}
+                    <h5>В ожидании</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID заказа</th>
+                                <th>Дата создания</th>
+                                <th>Статус</th>
+                                <th>Итого</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in pending_orders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.created_at }}</td>
+                                    <td>{{ order.get_status_display }}</td>
+                                    <td>{{ order.total_price }} руб.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                {% if accepted_orders %}
+                    <h5>Принят к работе</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID заказа</th>
+                                <th>Дата создания</th>
+                                <th>Статус</th>
+                                <th>Итого</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in accepted_orders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.created_at }}</td>
+                                    <td>{{ order.get_status_display }}</td>
+                                    <td>{{ order.total_price }} руб.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                <!-- Аналогично для остальных статусов -->
+
+            {% endif %}
+
+            <!-- Завершенные и отмененные заказы -->
+            {% if completed_orders or canceled_orders %}
+                <h4>Завершенные и отмененные заказы</h4>
+                {% if completed_orders %}
+                    <h5>Выполнен</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID заказа</th>
+                                <th>Дата создания</th>
+                                <th>Статус</th>
+                                <th>Итого</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in completed_orders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.created_at }}</td>
+                                    <td>{{ order.get_status_display }}</td>
+                                    <td>{{ order.total_price }} руб.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                {% if canceled_orders %}
+                    <h5>Отменен</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID заказа</th>
+                                <th>Дата создания</th>
+                                <th>Статус</th>
+                                <th>Итого</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in canceled_orders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.created_at }}</td>
+                                    <td>{{ order.get_status_display }}</td>
+                                    <td>{{ order.total_price }} руб.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

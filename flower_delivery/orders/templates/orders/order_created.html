@@ -1,0 +1,11 @@
+<!-- orders/templates/orders/order_created.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Заказ оформлен{% endblock %}
+
+{% block content %}
+    <h1>Спасибо за ваш заказ!</h1>
+    <p>Ваш заказ был успешно оформлен. Номер вашего заказа: <strong>{{ order.id }}</strong>.</p>
+    <a href="{% url 'product_list' %}" class="btn btn-primary">Вернуться в каталог</a>
+{% endblock %}

@@ -2,15 +2,36 @@
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm  # Убедитесь, что импортируется правильная форма
 from django.contrib import messages
+from orders.models import Order
 
-# Представление для профиля пользователя
+
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html')
+    # Получаем все заказы пользователя, отсортированные по дате создания
+    orders = request.user.orders.all().order_by('-created_at')
 
-# Представление для регистрации пользователей
+    # Разделяем заказы по статусам
+    pending_orders = orders.filter(status='pending')
+    accepted_orders = orders.filter(status='accepted')
+    in_progress_orders = orders.filter(status='in_progress')
+    in_delivery_orders = orders.filter(status='in_delivery')
+    completed_orders = orders.filter(status='completed')
+    canceled_orders = orders.filter(status='canceled')
+
+    context = {
+        'pending_orders': pending_orders,
+        'accepted_orders': accepted_orders,
+        'in_progress_orders': in_progress_orders,
+        'in_delivery_orders': in_delivery_orders,
+        'completed_orders': completed_orders,
+        'canceled_orders': canceled_orders,
+    }
+
+    return render(request, 'users/profile.html', context)
+
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -19,7 +40,6 @@ def register(request):
             username = form.cleaned_data.get('username')
             messages.success(request, f'Аккаунт создан для {username}!')
             return redirect('login')
-    # Перенаправляем на страницу входа после успешной регистрации
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})

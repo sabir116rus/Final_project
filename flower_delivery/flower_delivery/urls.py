@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('products.urls')),
     path('', include('users.urls')),
+    path('', include('orders.urls')),  # Добавлено
 ]
 
 if settings.DEBUG:

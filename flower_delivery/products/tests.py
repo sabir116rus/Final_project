@@ -23,7 +23,6 @@ class ProductModelTest(TestCase):
             name='Тестовый Букет',
             price=1999.99,
             image=image,
-            description='Описание тестового букета.'
         )
 
     # products/tests.py
@@ -35,7 +34,6 @@ class ProductModelTest(TestCase):
         """
         self.assertEqual(self.product.name, 'Тестовый Букет')
         self.assertEqual(self.product.price, 1999.99)
-        self.assertEqual(self.product.description, 'Описание тестового букета.')
 
         # Проверяем, что имя файла изображения содержит 'test_image.jpg',
         # но не обязательно совпадает полностью, так как имя файла может быть изменено
@@ -48,7 +46,6 @@ class ProductModelTest(TestCase):
         """
         self.assertEqual(self.product.name, 'Тестовый Букет')
         self.assertEqual(self.product.price, 1999.99)
-        self.assertEqual(self.product.description, 'Описание тестового букета.')
 
         # Проверяем, что URL изображения корректен
         self.assertIn('products/', self.product.image.url)  # Проверка части пути
@@ -71,13 +68,11 @@ class ProductListViewTest(TestCase):
             name='Букет Роз',
             price=1500.00,
             image=SimpleUploadedFile(name='rose.jpg', content=b'', content_type='image/jpeg'),
-            description='Красивый букет из роз.'
         )
         Product.objects.create(
             name='Букет Лилий',
             price=1800.00,
             image=SimpleUploadedFile(name='lily.jpg', content=b'', content_type='image/jpeg'),
-            description='Элегантный букет из лилий.'
         )
 
     def test_product_list_view_status_code(self):

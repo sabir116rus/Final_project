@@ -32,8 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'crispy_forms',
-    'crispy_bootstrap5',  # Для Bootstrap 5
+    'orders',
     'users',
     'products',
     'django.contrib.admin',
@@ -145,3 +144,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+
+# settings.py
+
+CART_SESSION_ID = 'cart'
