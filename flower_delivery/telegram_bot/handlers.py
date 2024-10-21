@@ -4,7 +4,6 @@ from aiogram import types
 from .bot import dp
 from django.conf import settings
 from orders.models import Order
-from aiogram.dispatcher.filters import Text
 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):

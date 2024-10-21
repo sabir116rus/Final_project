@@ -4,11 +4,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from products.models import Product
 from .cart import Cart
 from django.views.decorators.http import require_POST
-from .forms import CartAddProductForm, OrderCreateForm
 from .models import OrderItem
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from .forms import CartAddProductForm, OrderCreateForm
+from .forms import OrderCreateForm
+from django.contrib import messages
+
+@require_POST
+def cart_add(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    if not product.available:
+        messages.error(request, 'Извините, этот товар недоступен для заказа.')
+        return redirect('product_list')
+    cart.add(product=product)
+    return redirect('product_list')
 
 @require_POST
 def cart_add(request, product_id):
@@ -16,7 +25,7 @@ def cart_add(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart.add(product=product)
     # Перенаправляем обратно на страницу каталога
-    return redirect(reverse('product_list'))
+    return redirect('product_list')
 
 def cart_remove(request, product_id):
     cart = Cart(request)

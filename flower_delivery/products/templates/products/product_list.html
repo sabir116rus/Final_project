@@ -13,12 +13,20 @@
                     <img src="{{ product.image.url }}" class="card-img-top img-fluid product-image" alt="{{ product.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
-                        <!-- Убрано описание -->
+                        {% if product.available %}
+                            <p class="text-success fw-bold">В наличии</p>
+                        {% else %}
+                            <p class="text-danger fw-bold">Нет в наличии</p>
+                        {% endif %}
                         <p class="text-success fw-bold">Цена: {{ product.price }} руб.</p>
-                        <form action="{% url 'cart_add' product.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary">Добавить в корзину</button>
-                        </form>
+                        {% if product.available %}
+                            <form action="{% url 'cart_add' product.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                            </form>
+                        {% else %}
+                            <button class="btn btn-secondary" disabled>Нет в наличии</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

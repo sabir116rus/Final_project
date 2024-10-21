@@ -6,7 +6,6 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.filters import Command
-from aiogram import Router
 import django
 
 # Добавляем путь к корневой папке проекта
@@ -22,10 +21,6 @@ django.setup()
 from django.conf import settings
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
-
-# Регистрация роутеров
-router = Router()
-dp.include_router(router)
 
 # Обработчик команды /start
 @router.message(Command("start"))
