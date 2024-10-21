@@ -9,6 +9,9 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
+# flower_delivery/settings.py
+
 import os
 from pathlib import Path
 from django.contrib.messages import constants as messages
@@ -114,9 +117,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 
@@ -137,8 +142,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# flower_delivery/settings.py
-
 LOGIN_REDIRECT_URL = 'product_list'  # Куда перенаправлять после входа
 LOGIN_URL = 'login'  # URL для входа, если доступ ограничен
 
@@ -150,11 +153,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# settings.py
-
 CART_SESSION_ID = 'cart'
-
-# settings.py
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 ADMIN_TELEGRAM_ID = os.getenv('ADMIN_TELEGRAM_ID')

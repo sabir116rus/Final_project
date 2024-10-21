@@ -1,3 +1,5 @@
+# users/models.py
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -10,6 +12,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'Профиль пользователя {self.user.username}'
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

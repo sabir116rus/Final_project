@@ -37,6 +37,15 @@
                                     <td>{{ order.created_at }}</td>
                                     <td>{{ order.get_status_display }}</td>
                                     <td>{{ order.total_price }} руб.</td>
+                                    <!-- В таблице заказов добавьте ссылку на детали заказа -->
+                                    <td><a href="{% url 'order_detail' order.id %}">Детали заказа</a></td>
+                                    <!-- В таблице заказов со статусом "В ожидании" -->
+                                    <td>
+                                        <form action="{% url 'cancel_order' order.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Отменить</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>

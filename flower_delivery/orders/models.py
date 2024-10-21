@@ -42,6 +42,10 @@ class Order(models.Model):
     def __str__(self):
         return f'Заказ №{self.id} от {self.user.username}'
 
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

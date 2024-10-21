@@ -19,6 +19,11 @@ class OrderAdmin(admin.ModelAdmin):
     actions = ['mark_as_accepted', 'mark_as_in_progress', 'mark_as_in_delivery', 'mark_as_completed', 'mark_as_canceled']
     readonly_fields = ['user', 'created_at', 'total_price']
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.status == 'canceled':
+            return [f.name for f in self.model._meta.fields]
+        return self.readonly_fields
+
     def colored_status(self, obj):
         color = obj.status_color()
         return format_html('<span class="badge bg-{}">{}</span>', color, obj.get_status_display())

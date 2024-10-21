@@ -20,9 +20,18 @@ h1, h2 {
     object-fit: cover;
 }
 
-/* flower_delivery/static/css/main.css */
-
 .product-image {
     height: 300px; /* Увеличение высоты изображения */
     object-fit: cover; /* Обрезка изображения, чтобы заполнить контейнер */
+}
+
+/* Пример стилей для кнопок */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
 }

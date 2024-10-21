@@ -29,8 +29,6 @@ async def list_orders(message: types.Message):
         response = "Нет новых заказов."
     await message.answer(response)
 
-# telegram_bot/handlers.py
-
 @dp.message_handler(lambda message: str(message.from_user.id) == settings.ADMIN_TELEGRAM_ID, commands=['set_status'])
 async def set_order_status(message: types.Message):
     try:
