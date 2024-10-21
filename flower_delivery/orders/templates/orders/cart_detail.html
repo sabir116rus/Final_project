@@ -35,6 +35,7 @@
             </tbody>
         </table>
         <p>Общая стоимость: <strong>{{ cart.get_total_price }} руб.</strong></p>
+        <p><strong>Комментарий к заказу:</strong> {{ order.comment }}</p>
         <a href="{% url 'order_create' %}" class="btn btn-success">Оформить заказ</a>
     {% else %}
         <p>Ваша корзина пуста.</p>

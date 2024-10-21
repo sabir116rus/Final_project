@@ -26,6 +26,15 @@
                 </div>
             {% endif %}
         </div>
+        <div class="mb-3">
+            {{ form.comment.label_tag }}
+            {{ form.comment }}
+            {% if form.comment.errors %}
+                <div class="text-danger">
+                    {{ form.comment.errors }}
+                </div>
+            {% endif %}
+        </div>
         <button type="submit" class="btn btn-primary">Оформить заказ</button>
     </form>
 {% endblock %}
