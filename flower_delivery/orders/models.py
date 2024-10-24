@@ -1,13 +1,11 @@
 # orders/models.py
 
-import asyncio
 from django.db import models
 from django.contrib.auth.models import User
 from products.models import Product
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.conf import settings
 from telegram_bot.bot import bot
+from asgiref.sync import async_to_sync
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -47,6 +45,15 @@ class Order(models.Model):
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
+    def save(self, *args, **kwargs):
+        previous_status = None
+        if self.pk:
+            previous_status = Order.objects.get(pk=self.pk).status
+        super().save(*args, **kwargs)
+        if previous_status and previous_status != self.status:
+            # Статус изменился, отправляем уведомление
+            async_to_sync(send_status_change_notification)(self)
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -59,24 +66,15 @@ class OrderItem(models.Model):
     def get_cost(self):
         return self.price * self.quantity
 
-
-
-# Асинхронная функция для отправки уведомления о новом заказе
-async def send_telegram_notification(order):
-    await bot.send_message(
-        settings.ADMIN_TELEGRAM_ID,
-        f"Новый заказ №{order.id} от пользователя {order.user.username}. Сумма: {order.total_price} руб."
-    )
-
-# Сигнал, который срабатывает при создании нового заказа
-@receiver(post_save, sender=Order)
-def send_order_notification(sender, instance, created, **kwargs):
-    if created:
-        try:
-            # Создаем новый цикл событий
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(send_telegram_notification(instance))
-            loop.close()
-        except Exception as e:
-            print(f"Ошибка при отправке уведомления в Telegram: {e}")
+# Асинхронная функция для отправки уведомления об изменении статуса
+async def send_status_change_notification(order):
+    try:
+        text = (
+            f"Статус заказа №{order.id} изменен на '{order.get_status_display()}'."
+        )
+        await bot.send_message(
+            chat_id=settings.ADMIN_TELEGRAM_ID,
+            text=text
+        )
+    except Exception as e:
+        print(f"Ошибка при отправке уведомления в Telegram: {e}")

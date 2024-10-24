@@ -3,7 +3,7 @@
 import os
 import sys
 import asyncio
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, Router
 from aiogram.types import Message
 from aiogram.filters import Command
 import django
@@ -20,12 +20,18 @@ django.setup()
 # Создаём бота и диспетчер
 from django.conf import settings
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
+
+# Создаем router и подключаем к dispatcher
+router = Router()
 dp = Dispatcher()
 
 # Обработчик команды /start
 @router.message(Command("start"))
 async def start(message: Message):
     await message.answer("Привет, это бот для уведомлений о заказах!")
+
+# Регистрируем маршруты в диспетчере
+dp.include_router(router)
 
 # Функция для запуска бота
 async def main():

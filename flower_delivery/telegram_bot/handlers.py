@@ -16,9 +16,6 @@ async def list_orders(message: types.Message):
         await message.answer("У вас нет доступа к этой информации.")
         return
 
-    # Импортируем здесь, чтобы избежать проблем с импортами
-    from orders.models import Order
-
     orders = Order.objects.filter(status='pending')
     if orders.exists():
         response = "Текущие заказы:\n"
@@ -48,3 +45,19 @@ async def set_order_status(message: types.Message):
         await message.answer("Заказ с указанным ID не найден.")
     except Exception as e:
         await message.answer(f"Произошла ошибка: {e}")
+
+@dp.message_handler(commands=['link'])
+async def link_account(message: types.Message):
+    args = message.text.split()
+    if len(args) != 2:
+        await message.answer("Пожалуйста, отправьте команду в формате: /link your_username")
+        return
+    username = args[1]
+    try:
+        user = User.objects.get(username=username)
+        profile = user.profile
+        profile.telegram_id = str(message.from_user.id)
+        profile.save()
+        await message.answer(f"Ваш аккаунт связан с пользователем {username}. Вы будете получать уведомления о статусе заказов.")
+    except User.DoesNotExist:
+        await message.answer("Пользователь с таким именем не найден.")
