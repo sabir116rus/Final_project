@@ -7,6 +7,7 @@ from products.models import Product
 from .models import Order, OrderItem
 from django.core.files.uploadedfile import SimpleUploadedFile
 from decimal import Decimal
+from unittest.mock import patch  # Импортируем patch
 
 
 class CartTest(TestCase):
@@ -18,7 +19,6 @@ class CartTest(TestCase):
             name='Тестовый Букет',
             price=1999.99,
             image=SimpleUploadedFile(name='test_image.jpg', content=b'', content_type='image/jpeg'),
-            # description=''  # Удалено поле description
         )
 
     def test_cart_add(self):
@@ -62,7 +62,8 @@ class OrderCreateTest(TestCase):
         # Добавляем товар в корзину
         self.client.post(reverse('cart_add', args=[self.product.id]))
 
-    def test_order_create_get(self):
+    @patch('orders.views.send_order_notification')  # Мокаем функцию отправки уведомления
+    def test_order_create_get(self, mock_send_notification):
         """
         Проверяем доступность страницы оформления заказа.
         """
@@ -70,13 +71,15 @@ class OrderCreateTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'orders/order_create.html')
 
-    def test_order_create_post(self):
+    @patch('orders.views.send_order_notification')  # Мокаем функцию отправки уведомления
+    def test_order_create_post(self, mock_send_notification):
         """
         Проверяем процесс создания заказа.
         """
         response = self.client.post(reverse('order_create'), {
             'address': 'Test Address 123',
-            'phone': '1234567890'
+            'phone': '1234567890',
+            'comment': 'Test comment'  # Добавляем комментарий, если он обязательный
         })
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'orders/order_created.html')
@@ -97,12 +100,15 @@ class OrderCreateTest(TestCase):
         self.assertEqual(order_item.quantity, 1)
         self.assertEqual(order_item.price.quantize(Decimal('0.01')), Decimal(self.product.price).quantize(Decimal('0.01')))
 
-
         # Проверяем, что корзина очищена
         cart = self.client.session.get('cart')
         self.assertIsNone(cart)
 
-    def test_order_create_redirect_if_cart_empty(self):
+        # Проверяем, что функция отправки уведомления была вызвана
+        mock_send_notification.assert_called_once_with(order)
+
+    @patch('orders.views.send_order_notification')  # Мокаем функцию отправки уведомления
+    def test_order_create_redirect_if_cart_empty(self, mock_send_notification):
         """
         Проверяем, что при пустой корзине происходит редирект на страницу каталога.
         """
@@ -112,6 +118,8 @@ class OrderCreateTest(TestCase):
         session.save()
         response = self.client.get(reverse('order_create'))
         self.assertRedirects(response, reverse('product_list'))
+        # Проверяем, что функция отправки уведомления не была вызвана
+        mock_send_notification.assert_not_called()
 
 
 class OrderStatusTest(TestCase):
@@ -142,7 +150,8 @@ class OrderStatusTest(TestCase):
             quantity=1
         )
 
-    def test_admin_can_change_order_status(self):
+    @patch('orders.models.send_status_change_notification')  # Мокаем функцию отправки уведомления
+    def test_admin_can_change_order_status(self, mock_send_status_notification):
         """
         Проверяем, что администратор может изменять статус заказа.
         """
@@ -157,12 +166,12 @@ class OrderStatusTest(TestCase):
             'total_price': self.order.total_price,
             'address': self.order.address,
             'phone': self.order.phone,
-            # Management form fields for the inline
+            # Management form fields для inline OrderItem
             'items-TOTAL_FORMS': '1',
             'items-INITIAL_FORMS': '1',
             'items-MIN_NUM_FORMS': '0',
             'items-MAX_NUM_FORMS': '1000',
-            # Data for the existing OrderItem
+            # Данные для существующего OrderItem
             'items-0-id': self.order_item.id,
             'items-0-order': self.order.id,
             'items-0-product': self.product.id,
@@ -176,3 +185,6 @@ class OrderStatusTest(TestCase):
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, 'accepted')  # Проверяем, что статус изменился
         self.assertEqual(response.status_code, 200)
+
+        # Проверяем, что функция отправки уведомления была вызвана
+        mock_send_status_notification.assert_called_once_with(self.order)
