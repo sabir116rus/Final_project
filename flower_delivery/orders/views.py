@@ -13,6 +13,7 @@ from django.conf import settings
 from asgiref.sync import async_to_sync, sync_to_async
 from aiogram import Bot
 import os
+from aiogram.types import FSInputFile  # Импортируем FSInputFile
 
 @login_required
 def order_create(request):
@@ -76,13 +77,13 @@ async def send_order_notification(order):
         product_image_path, text = await sync_to_async(get_order_data)()
 
         if product_image_path and os.path.exists(product_image_path):
-            with open(product_image_path, 'rb') as photo:
-                await bot.send_photo(
-                    chat_id=settings.ADMIN_TELEGRAM_ID,
-                    photo=photo,
-                    caption=text,
-                    parse_mode='HTML'
-                )
+            photo = FSInputFile(product_image_path)
+            await bot.send_photo(
+                chat_id=settings.ADMIN_TELEGRAM_ID,
+                photo=photo,
+                caption=text,
+                parse_mode='HTML'
+            )
         else:
             await bot.send_message(
                 chat_id=settings.ADMIN_TELEGRAM_ID,
