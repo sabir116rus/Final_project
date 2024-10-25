@@ -3,39 +3,26 @@
 import os
 import sys
 import asyncio
-from aiogram import Bot, Dispatcher, Router
-from aiogram.types import Message
-from aiogram.filters import Command
 import django
 
 # Добавляем путь к корневой папке проекта
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
-# Устанавливаем настройки Django
+# Устанавливаем переменную окружения с настройками Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flower_delivery.settings')
 
 # Инициализируем Django
 django.setup()
 
-# Создаём бота и диспетчер
-from django.conf import settings
-bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
+from telegram_bot.bot import bot, dp
 
-# Создаем router и подключаем к dispatcher
-router = Router()
-dp = Dispatcher()
-
-# Обработчик команды /start
-@router.message(Command("start"))
-async def start(message: Message):
-    await message.answer("Привет, это бот для уведомлений о заказах!")
-
-# Регистрируем маршруты в диспетчере
-dp.include_router(router)
-
-# Функция для запуска бота
 async def main():
-    await dp.start_polling(bot)
+    try:
+        # Запускаем поллинг бота
+        await dp.start_polling(bot)
+    finally:
+        # Закрываем сессию бота при завершении
+        await bot.session.close()
 
 if __name__ == '__main__':
     asyncio.run(main())

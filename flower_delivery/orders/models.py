@@ -4,17 +4,17 @@ from django.db import models
 from django.contrib.auth.models import User
 from products.models import Product
 from django.conf import settings
-from telegram_bot.bot import bot
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
+from aiogram import Bot
 
 class Order(models.Model):
     STATUS_CHOICES = [
-        ('pending', 'В ожидании'),           # Новый заказ
-        ('accepted', 'Принят к работе'),     # Принят к работе
-        ('in_progress', 'Находится в работе'), # В процессе выполнения
-        ('in_delivery', 'В доставке'),       # В доставке
-        ('completed', 'Выполнен'),           # Завершен
-        ('canceled', 'Отменен'),             # Отменен
+        ('pending', 'В ожидании'),  # Новый заказ
+        ('accepted', 'Принят к работе'),  # Принят к работе
+        ('in_progress', 'Находится в работе'),  # В процессе выполнения
+        ('in_delivery', 'В доставке'),  # В доставке
+        ('completed', 'Выполнен'),  # Завершен
+        ('canceled', 'Отменен'),  # Отменен
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
@@ -54,6 +54,41 @@ class Order(models.Model):
             # Статус изменился, отправляем уведомление
             async_to_sync(send_status_change_notification)(self)
 
+
+# Асинхронная функция для отправки уведомления об изменении статуса
+async def send_status_change_notification(order):
+    try:
+        bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
+
+        # Получаем необходимые данные из ORM в синхронном контексте
+        def get_notification_data():
+            text = (
+                f"🔔 <b>Статус вашего заказа №{order.id} изменен</b>\n"
+                f"Новый статус: <b>{order.get_status_display()}</b>"
+            )
+            telegram_id = order.user.profile.telegram_id
+            return text, telegram_id
+
+        text, telegram_id = await sync_to_async(get_notification_data)()
+
+        # Отправляем уведомление администратору
+        await bot.send_message(
+            chat_id=settings.ADMIN_TELEGRAM_ID,
+            text=text,
+            parse_mode='HTML'
+        )
+        # Если пользователь связал свой аккаунт с Telegram, отправляем ему уведомление
+        if telegram_id:
+            await bot.send_message(
+                chat_id=telegram_id,
+                text=text,
+                parse_mode='HTML'
+            )
+        await bot.session.close()  # Закрываем сессию бота
+    except Exception as e:
+        print(f"Ошибка при отправке уведомления в Telegram: {e}")
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -65,16 +100,3 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
-
-# Асинхронная функция для отправки уведомления об изменении статуса
-async def send_status_change_notification(order):
-    try:
-        text = (
-            f"Статус заказа №{order.id} изменен на '{order.get_status_display()}'."
-        )
-        await bot.send_message(
-            chat_id=settings.ADMIN_TELEGRAM_ID,
-            text=text
-        )
-    except Exception as e:
-        print(f"Ошибка при отправке уведомления в Telegram: {e}")
