@@ -24,6 +24,9 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
     comment = models.TextField(blank=True, null=True, verbose_name='Комментарий к заказу')
+    delivery_date = models.DateField(verbose_name='Дата доставки', null=True, blank=True)
+    delivery_time = models.TimeField(verbose_name='Время доставки', null=True, blank=True)
+    delivery_place = models.CharField(max_length=255, verbose_name='Место доставки', null=True, blank=True)
 
     def status_color(self):
         status_colors = {

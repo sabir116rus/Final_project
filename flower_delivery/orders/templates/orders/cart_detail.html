@@ -7,35 +7,37 @@
 {% block content %}
     <h1>Корзина</h1>
     {% if cart %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Товар</th>
-                    <th>Цена за единицу</th>
-                    <th>Количество</th>
-                    <th>Общая цена</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart %}
+        <form action="{% url 'cart_update' %}" method="post">
+            {% csrf_token %}
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{ item.product.name }}</td>
-                        <td>{{ item.price }} руб.</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ item.total_price }} руб.</td>
-                        <td>
-                            <form action="{% url 'cart_remove' item.product.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
-                            </form>
-                        </td>
+                        <th>Товар</th>
+                        <th>Цена за единицу</th>
+                        <th>Количество</th>
+                        <th>Общая цена</th>
+                        <th></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.price }} руб.</td>
+                            <td>
+                                <input type="number" name="quantity_{{ item.product.id }}" value="{{ item.quantity }}" min="1" class="form-control" style="width: 80px;">
+                            </td>
+                            <td>{{ item.total_price }} руб.</td>
+                            <td>
+                                <a href="{% url 'cart_remove' item.product.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Обновить корзину</button>
+        </form>
         <p>Общая стоимость: <strong>{{ cart.get_total_price }} руб.</strong></p>
-        <p><strong>Комментарий к заказу:</strong> {{ order.comment }}</p>
         <a href="{% url 'order_create' %}" class="btn btn-success">Оформить заказ</a>
     {% else %}
         <p>Ваша корзина пуста.</p>

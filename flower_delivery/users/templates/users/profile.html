@@ -39,6 +39,7 @@
                                     <td>{{ order.total_price }} руб.</td>
                                     <!-- В таблице заказов добавьте ссылку на детали заказа -->
                                     <td><a href="{% url 'order_detail' order.id %}">Детали заказа</a></td>
+                                    <td><a href="{% url 'reorder' order.id %}" class="btn btn-secondary btn-sm">Повторить заказ</a></td>
                                     <!-- В таблице заказов со статусом "В ожидании" -->
                                     <td>
                                         <form action="{% url 'cancel_order' order.id %}" method="post">
@@ -70,6 +71,7 @@
                                     <td>{{ order.created_at }}</td>
                                     <td>{{ order.get_status_display }}</td>
                                     <td>{{ order.total_price }} руб.</td>
+                                    <td><a href="{% url 'reorder' order.id %}" class="btn btn-secondary btn-sm">Повторить заказ</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -101,6 +103,7 @@
                                     <td>{{ order.created_at }}</td>
                                     <td>{{ order.get_status_display }}</td>
                                     <td>{{ order.total_price }} руб.</td>
+                                    <td><a href="{% url 'reorder' order.id %}" class="btn btn-secondary btn-sm">Повторить заказ</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -125,6 +128,7 @@
                                     <td>{{ order.created_at }}</td>
                                     <td>{{ order.get_status_display }}</td>
                                     <td>{{ order.total_price }} руб.</td>
+                                    <td><a href="{% url 'reorder' order.id %}" class="btn btn-secondary btn-sm">Повторить заказ</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

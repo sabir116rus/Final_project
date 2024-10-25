@@ -101,11 +101,33 @@ def cart_add(request, product_id):
     if not product.available:
         messages.error(request, 'Извините, этот товар недоступен для заказа.')
         return redirect('product_list')
-    cart.add(product=product)
+    quantity = request.POST.get('quantity', 1)
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        quantity = 1
+    cart.add(product=product, quantity=quantity)
     messages.success(request, f'Товар "{product.name}" добавлен в корзину.')
     return redirect('product_list')
 
 @require_POST
+def cart_update(request):
+    cart = Cart(request)
+    for item in cart:
+        product_id = str(item['product'].id)
+        quantity = request.POST.get('quantity_' + product_id)
+        if quantity:
+            try:
+                quantity = int(quantity)
+                if quantity > 0:
+                    cart.add(product=item['product'], quantity=quantity, override_quantity=True)
+                else:
+                    cart.remove(item['product'])
+            except ValueError:
+                messages.error(request, f'Введите корректное количество для товара {item["product"].name}')
+    messages.success(request, 'Корзина успешно обновлена.')
+    return redirect('cart_detail')
+
 def cart_remove(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)

@@ -27,6 +27,33 @@
             {% endif %}
         </div>
         <div class="mb-3">
+            {{ form.delivery_date.label_tag }}
+            {{ form.delivery_date }}
+            {% if form.delivery_date.errors %}
+                <div class="text-danger">
+                    {{ form.delivery_date.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.delivery_time.label_tag }}
+            {{ form.delivery_time }}
+            {% if form.delivery_time.errors %}
+                <div class="text-danger">
+                    {{ form.delivery_time.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.delivery_place.label_tag }}
+            {{ form.delivery_place }}
+            {% if form.delivery_place.errors %}
+                <div class="text-danger">
+                    {{ form.delivery_place.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
             {{ form.comment.label_tag }}
             {{ form.comment }}
             {% if form.comment.errors %}

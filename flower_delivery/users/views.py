@@ -8,6 +8,21 @@ from orders.models import Order
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from orders.cart import Cart
+
+@login_required
+def reorder(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    cart = Cart(request)
+    for item in order.items.all():
+        product = item.product
+        quantity = item.quantity
+        if product.available:
+            cart.add(product=product, quantity=quantity)
+        else:
+            messages.warning(request, f'Товар "{product.name}" недоступен и не был добавлен в корзину.')
+    messages.success(request, f'Товары из заказа №{order.id} добавлены в корзину.')
+    return redirect('cart_detail')
 
 @login_required
 def order_detail(request, order_id):
