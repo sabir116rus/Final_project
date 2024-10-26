@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from products.models import Product
 from .cart import Cart
 from django.views.decorators.http import require_POST
-from .models import OrderItem
+from .models import OrderItem, Order
 from django.contrib.auth.decorators import login_required
 from .forms import OrderCreateForm
 from django.contrib import messages
@@ -13,7 +13,10 @@ from django.conf import settings
 from asgiref.sync import async_to_sync, sync_to_async
 from aiogram import Bot
 import os
-from aiogram.types import FSInputFile  # Импортируем FSInputFile
+from aiogram.types import FSInputFile
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncDay
 
 @login_required
 def order_create(request):
@@ -138,3 +141,13 @@ def cart_remove(request, product_id):
 def cart_detail(request):
     cart = Cart(request)
     return render(request, 'orders/cart_detail.html', {'cart': cart})
+
+@staff_member_required
+def sales_report(request):
+    # Агрегируем данные по дням
+    sales_data = Order.objects.values(date=TruncDay('created_at')).annotate(
+        total_orders=Count('id'),
+        total_revenue=Sum('total_price')
+    ).order_by('-date')
+
+    return render(request, 'orders/sales_report.html', {'sales_data': sales_data})
