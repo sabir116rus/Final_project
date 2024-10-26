@@ -1,0 +1,55 @@
+<!-- products/templates/products/product_detail.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
+        </div>
+        <div class="col-md-6">
+            <h2>{{ product.name }}</h2>
+            <p>Цена: {{ product.price }} руб.</p>
+            <p>Средний рейтинг: {{ average_rating|default:0|floatformat:1 }}/5 ({{ review_count }} отзывов)</p>
+            {% if product.available %}
+                <p class="text-success fw-bold">В наличии</p>
+                <form action="{% url 'cart_add' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                </form>
+            {% else %}
+                <p class="text-danger fw-bold">Нет в наличии</p>
+            {% endif %}
+            <!-- Отзывы -->
+            <h3>Отзывы</h3>
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="border p-2 mb-2">
+                        <strong>{{ review.user.username }}</strong> - Оценка: {{ review.rating }}/5
+                        <p>{{ review.comment }}</p>
+                        <small>{{ review.created_at }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Отзывов пока нет.</p>
+            {% endif %}
+            <!-- Форма для добавления отзыва -->
+            {% if user.is_authenticated %}
+                {% if user_review %}
+                    <p>Вы уже оставили отзыв для этого продукта.</p>
+                {% else %}
+                    <h4>Оставить отзыв</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Отправить</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <p>Пожалуйста, <a href="{% url 'login' %}?next={{ request.path }}">войдите</a>, чтобы оставить отзыв.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -10,9 +10,14 @@
         {% for product in products %}
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
-                    <img src="{{ product.image.url }}" class="card-img-top img-fluid product-image" alt="{{ product.name }}">
+                    <a href="{% url 'product_detail' product.id %}">
+                        <img src="{{ product.image.url }}" class="card-img-top img-fluid product-image" alt="{{ product.name }}">
+                    </a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
+                        <h5 class="card-title">
+                            <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                        </h5>
+                        <p>Средний рейтинг: {{ product.get_average_rating }}/5</p>
                         {% if product.available %}
                             <p class="text-success fw-bold">В наличии</p>
                         {% else %}
