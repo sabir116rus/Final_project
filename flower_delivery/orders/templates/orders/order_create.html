@@ -5,63 +5,58 @@
 {% block title %}Оформление заказа{% endblock %}
 
 {% block content %}
-    <h1>Оформление заказа</h1>
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.address.label_tag }}
-            {{ form.address }}
-            {% if form.address.errors %}
-                <div class="text-danger">
-                    {{ form.address.errors }}
+    <h1 class="mb-5 text-center">Оформление заказа</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" class="shadow-sm p-4 bg-white rounded">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.address.label_tag }}
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="text-danger">
+                            {{ form.address.errors }}
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.phone.label_tag }}
-            {{ form.phone }}
-            {% if form.phone.errors %}
-                <div class="text-danger">
-                    {{ form.phone.errors }}
+                <div class="mb-3">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="text-danger">
+                            {{ form.phone.errors }}
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.delivery_date.label_tag }}
-            {{ form.delivery_date }}
-            {% if form.delivery_date.errors %}
-                <div class="text-danger">
-                    {{ form.delivery_date.errors }}
+                <div class="mb-3">
+                    {{ form.delivery_date.label_tag }}
+                    {{ form.delivery_date }}
+                    {% if form.delivery_date.errors %}
+                        <div class="text-danger">
+                            {{ form.delivery_date.errors }}
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.delivery_time.label_tag }}
-            {{ form.delivery_time }}
-            {% if form.delivery_time.errors %}
-                <div class="text-danger">
-                    {{ form.delivery_time.errors }}
+                <div class="mb-3">
+                    {{ form.delivery_time.label_tag }}
+                    {{ form.delivery_time }}
+                    {% if form.delivery_time.errors %}
+                        <div class="text-danger">
+                            {{ form.delivery_time.errors }}
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.delivery_place.label_tag }}
-            {{ form.delivery_place }}
-            {% if form.delivery_place.errors %}
-                <div class="text-danger">
-                    {{ form.delivery_place.errors }}
+                <div class="mb-3">
+                    {{ form.comment.label_tag }}
+                    {{ form.comment }}
+                    {% if form.comment.errors %}
+                        <div class="text-danger">
+                            {{ form.comment.errors }}
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
+                <button type="submit" class="btn btn-success w-100">Оформить заказ</button>
+            </form>
         </div>
-        <div class="mb-3">
-            {{ form.comment.label_tag }}
-            {{ form.comment }}
-            {% if form.comment.errors %}
-                <div class="text-danger">
-                    {{ form.comment.errors }}
-                </div>
-            {% endif %}
-        </div>
-        <button type="submit" class="btn btn-primary">Оформить заказ</button>
-    </form>
+    </div>
 {% endblock %}

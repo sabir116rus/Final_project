@@ -5,23 +5,25 @@
 {% block title %}Отчёт по продажам{% endblock %}
 
 {% block content %}
-<h1>Отчёт по продажам</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Дата</th>
-            <th>Количество заказов</th>
-            <th>Общая выручка (руб.)</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for entry in sales_data %}
-        <tr>
-            <td>{{ entry.date|date:"d.m.Y" }}</td>
-            <td>{{ entry.total_orders }}</td>
-            <td>{{ entry.total_revenue }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <h1 class="mb-5 text-center">Отчёт по продажам</h1>
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Дата</th>
+                    <th>Количество заказов</th>
+                    <th>Общая выручка (руб.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in sales_data %}
+                <tr>
+                    <td>{{ entry.date|date:"d.m.Y" }}</td>
+                    <td>{{ entry.total_orders }}</td>
+                    <td>{{ entry.total_revenue }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

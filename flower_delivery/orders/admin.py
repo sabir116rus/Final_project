@@ -11,16 +11,13 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'created_at', 'delivery_date', 'delivery_time', 'delivery_place', 'colored_status', 'total_price']
+    list_display = ['id', 'user', 'created_at', 'delivery_date', 'delivery_time', 'colored_status', 'total_price']
     list_filter = ['status', 'created_at', 'user']
     search_fields = ['id', 'user__username', 'user__email']
     inlines = [OrderItemInline]
     ordering = ['-created_at']
     actions = ['mark_as_accepted', 'mark_as_in_progress', 'mark_as_in_delivery', 'mark_as_completed', 'mark_as_canceled']
-    readonly_fields = ['user', 'created_at', 'total_price', 'delivery_date', 'delivery_time', 'delivery_place']
-
-    # Остальной код остается без изменений
-
+    readonly_fields = ['user', 'created_at', 'total_price', 'delivery_date', 'delivery_time']
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.status == 'canceled':

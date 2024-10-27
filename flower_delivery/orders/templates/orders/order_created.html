@@ -5,10 +5,14 @@
 {% block title %}Заказ оформлен{% endblock %}
 
 {% block content %}
-    <h1>Спасибо за ваш заказ!</h1>
-    <p>Ваш заказ был успешно оформлен. Номер вашего заказа: <strong>{{ order.id }}</strong>.</p>
-    <p><strong>Дата доставки:</strong> {{ order.delivery_date }}</p>
-    <p><strong>Время доставки:</strong> {{ order.delivery_time }}</p>
-    <p><strong>Место доставки:</strong> {{ order.delivery_place }}</p>
-    <a href="{% url 'product_list' %}" class="btn btn-primary">Вернуться в каталог</a>
+    <div class="text-center">
+        <h1 class="mb-4">Спасибо за ваш заказ!</h1>
+        <p class="lead">Ваш заказ был успешно оформлен.</p>
+        <p>Номер вашего заказа: <strong>#{{ order.id }}</strong></p>
+        <p><strong>Дата доставки:</strong> {{ order.delivery_date }}</p>
+        <p><strong>Время доставки:</strong> {{ order.delivery_time }}</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary mt-4">
+            <i class="bi bi-arrow-left"></i> Вернуться в каталог
+        </a>
+    </div>
 {% endblock %}

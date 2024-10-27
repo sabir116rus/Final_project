@@ -5,20 +5,37 @@
 {% block title %}Детали заказа{% endblock %}
 
 {% block content %}
-<h2>Детали заказа №{{ order.id }}</h2>
-<p><strong>Статус:</strong> {{ order.get_status_display }}</p>
-<p><strong>Дата создания:</strong> {{ order.created_at }}</p>
-<p><strong>Адрес доставки:</strong> {{ order.address }}</p>
-<p><strong>Дата доставки:</strong> {{ order.delivery_date }}</p>
-<p><strong>Время доставки:</strong> {{ order.delivery_time }}</p>
-<p><strong>Место доставки:</strong> {{ order.delivery_place }}</p>
-<p><strong>Телефон:</strong> {{ order.phone }}</p>
-<h3>Товары:</h3>
-<ul>
-    {% for item in order.items.all %}
-        <li>{{ item.product.name }} x {{ item.quantity }} - {{ item.price }} руб.</li>
-    {% endfor %}
-</ul>
-<p><strong>Общая сумма:</strong> {{ order.total_price }} руб.</p>
-<a href="{% url 'profile' %}" class="btn btn-primary">Вернуться в профиль</a>
+    <h1 class="mb-5 text-center">Детали заказа №{{ order.id }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Информация о заказе</h4>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Статус:</strong> {{ order.get_status_display }}</li>
+                <li class="list-group-item"><strong>Дата создания:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</li>
+                <li class="list-group-item"><strong>Адрес доставки:</strong> {{ order.address }}</li>
+                <li class="list-group-item"><strong>Дата доставки:</strong> {{ order.delivery_date }}</li>
+                <li class="list-group-item"><strong>Время доставки:</strong> {{ order.delivery_time }}</li>
+                <li class="list-group-item"><strong>Телефон:</strong> {{ order.phone }}</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h4>Товары в заказе</h4>
+            <ul class="list-group">
+                {% for item in order.items.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ item.product.name }} x {{ item.quantity }}
+                        <span>{{ item.price }} руб.</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="mt-3 text-end">
+                <h5>Общая сумма: <strong>{{ order.total_price }} руб.</strong></h5>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 text-center">
+        <a href="{% url 'profile' %}" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Вернуться в профиль
+        </a>
+    </div>
 {% endblock %}

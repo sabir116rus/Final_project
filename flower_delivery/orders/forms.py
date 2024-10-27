@@ -6,7 +6,7 @@ from .models import Order
 class OrderCreateForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['address', 'phone', 'comment', 'delivery_date', 'delivery_time', 'delivery_place']
+        fields = ['address', 'phone', 'comment', 'delivery_date', 'delivery_time']
         labels = {
             'address': 'Адрес доставки',
             'phone': 'Контактный телефон',
