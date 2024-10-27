@@ -1,6 +1,6 @@
 # Flower Delivery
 
-![Логотип Flower Delivery](C:\Users\User\Documents\GitHub\Final_project\flower_delivery\static\images\logo.png)
+![Логотип Flower Delivery](\flower_delivery\static\images\logo.png)
 
 **Flower Delivery** — это полноценное веб-приложение, созданное с использованием Django, позволяющее пользователям просматривать и покупать цветы онлайн. Платформа отличается удобным интерфейсом, надежной системой управления заказами, интеграцией с Telegram для получения уведомлений в реальном времени и административной панелью для управления продуктами и заказами.
 
