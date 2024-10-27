@@ -11,7 +11,10 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="{% url 'product_detail' product.id %}">
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        <!-- Обёртка для изображения с фиксированным размером -->
+                        <div class="product-img-wrapper" style="position: relative; width: 100%; padding-top: 120%;"> <!-- 5:6 ratio -->
+                            <img src="{{ product.image.url }}" class="card-img-top position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover;" alt="{{ product.name }}">
+                        </div>
                     </a>
                     <div class="card-body d-flex flex-column">
                         <h5 class="product-title">
